@@ -53,7 +53,7 @@ Future updates may include additional functionality, performance enhancements, a
 Check back here for the latest changes and development progress.
 > **Migration Note**: This is the first verstion released.
 
-### AWS resources
+## ☁️ AWS resources
 
 This diagram provides a simplified overview of the AWS infrastructure and system architecture used in the application.
 
