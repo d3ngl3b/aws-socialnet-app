@@ -1,1 +1,0 @@
-# aws-socialnet-app
