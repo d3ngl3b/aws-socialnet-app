@@ -1,0 +1,19 @@
+<div class="subscriptions-container">
+    <h2>Subscriptions</h2>
+    {% for subscription in subscriptions %}
+        <div class="profile-card">
+                <img src="{{ subscription.sub_to.profile.image.url }}" alt="{{ subscription.sub_to.username }}" class="profile-image">
+                <div class="profile-info">
+                    <h2><a href="{% url "account:user_detail" subscription.sub_to.username %}">{{ subscription.sub_to.username }}</a></h2>
+                    {% if user != request.user %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+    {% empty %}
+        <p>No subscriptions made yet</p>
+    {% endfor %}
+</div>

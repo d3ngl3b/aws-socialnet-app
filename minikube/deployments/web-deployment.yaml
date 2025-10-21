@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      # Add secretes: run  kubectl create configmap web-app-config --from-env-file=.dev.env
+      # and: kubectl get configmap web-app-config -o yaml
+      volumes:
+        - name: static-files
+          persistentVolumeClaim:
+            claimName: static-pvc
+      containers:
+        - name: web-app-container
+          image: gl3b/blog-web-app:latest
+          command: [ "/usr/src/app/entrypoint.sh" ]
+          args: [ "gunicorn", "blogsite.wsgi:application", "--bind", "0.0.0.0:8000" ]
+          envFrom:
+            - configMapRef:
+                name: web-app-config
+          volumeMounts:
+            - mountPath: /usr/src/app/staticfiles
+              name: static-files
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django
+  labels:
+    name: django
+spec:
+  selector:
+    app: web-app
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+
+
+
+

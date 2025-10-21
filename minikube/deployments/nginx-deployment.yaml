@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: static-files
+          persistentVolumeClaim:
+            claimName: static-pvc
+      containers:
+        - name: nginx
+          image: gl3b/blog-nginx:latest
+          volumeMounts:
+            - mountPath: /home/app/blogsite/staticfiles/
+              name: static-files
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+spec:
+  selector:
+    app: nginx
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80

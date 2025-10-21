@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+/.dev.env
+/minikube/configmap/
+/lambda/image_resizer/lambda_function.zip
+/app/blog/migrations/
+/app/account/migrations/
+/terraform/.terraform/
+/terraform/.terraform.lock.hcl

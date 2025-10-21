@@ -1,0 +1,50 @@
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    volumes:
+      - static_data:/home/app/blogsite/staticfiles/
+    ports:
+      - 1337:80
+    depends_on:
+      - django
+    networks:
+      - blog-network
+
+  django:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: gunicorn blogsite.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_data:/usr/src/app/staticfiles
+#      - ./app:/usr/src/app
+    expose:
+      - 8000
+    env_file:
+      - ./.dev.env
+    networks:
+      - blog-network
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=blogdb
+    ports:
+      - 5432:5432
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    depends_on:
+      - django
+    networks:
+      - blog-network
+
+volumes:
+  static_data:
+  database_data:
+
+networks:
+  blog-network:

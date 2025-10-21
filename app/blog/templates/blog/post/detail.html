@@ -1,0 +1,72 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <article class="post-detail">
+        <header class="post-header">
+            <h1 class="post-title">{{ post.title }}</h1>
+            <div class="post-meta">
+                <span class="published-date">Published {{ post.publish }}</span>
+                <span class="author">by <a href="{% url 'account:user_detail' post.author.username %}" class="author-link">{{ post.author }}</a></span>
+            </div>
+        </header>
+
+        {% if post.image %}
+            <div class="post-image-container">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
+            </div>
+        {% endif %}
+
+        <div class="post-content">
+            {{ post.body|linebreaks }}
+        </div>
+
+        <div class="post-actions">
+            <a href="{% url "blog:post_share" post.id %}" class="btn btn-outline">
+                Share this post
+            </a>
+        </div>
+
+        {% if similar_posts %}
+        <section class="similar-posts">
+            <h2 class="section-title">Similar posts</h2>
+            <div class="similar-posts-list">
+                {% for similar_post in similar_posts %}
+                    <div class="similar-post-item">
+                        <a href="{{ similar_post.get_absolute_url }}" class="similar-post-link">{{ similar_post.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="comments-section">
+            {% with comments.count as total_comments %}
+                <h2 class="section-title">
+                    {{ total_comments }} comment{{ total_comments|pluralize }}
+                </h2>
+            {% endwith %}
+
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <div class="comment-meta">
+                            <span class="comment-author">{{ comment.name }}</span>
+                            <span class="comment-date">{{ comment.created }}</span>
+                        </div>
+                        <div class="comment-body">
+                            {{ comment.body|linebreaks }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="no-comments">There are no comments yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="comment-form-section">
+            {% include "blog/post/includes/comment_form.html" %}
+        </section>
+    </article>
+{% endblock %}

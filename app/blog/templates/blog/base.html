@@ -1,0 +1,78 @@
+{% load blog_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static "css/blog.css" %}">
+</head>
+<body>
+    <header class="header">
+        <a href="{% url "blog:post_list" %}" class="logo">Blog</a>
+        <nav class="header-right">
+            <a class="active" href="{% url "blog:post_list" %}">Home</a>
+            <a href="{% url "blog:post_search" %}">Search</a>
+            {% if user.is_authenticated %}
+                <a href="{% url "blog:subscription_feed" %}">FYP</a>
+                <a href="{% url "account:profile" %}">Profile</a>
+                <a href="{% url "blog:post_create" %}">Publish</a>
+                <a href="{% url "account:logout" %}">Logout</a>
+            {% else %}
+                <a href="{% url "account:register" %}">Register</a>
+                <a href="{% url "account:login" %}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="layout">
+        <section id="content">
+            {% if messages %}
+                <div class="message-container">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+        </section>
+
+        <aside id="sidebar">
+            <div class="sidebar-content">
+                <h2>Blog</h2>
+                <p class="blog-stats">
+                    Total posts: {% total_posts %}
+                </p>
+
+                <div class="sidebar-section">
+                    <a href="{% url "blog:post_feed" %}" class="rss-link">
+                        RSS Feed
+                    </a>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Latest Posts</h3>
+                    {% show_latest_posts %}
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Most Discussed</h3>
+                    {% get_most_commented_posts as popular_posts %}
+                    <ul class="post-list">
+                        {% for post in popular_posts %}
+                            <li class="post-item">
+                                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+{% load account_tags %}
+{% block content %}
+    <div class="profile-container">
+        <div class="profile-card">
+            <img src="{{ user.profile.image.url }}" alt="Profile picture" class="profile-image">
+            <div class="profile-info">
+                <h2>{{ user.username }}</h2>
+                <p>{{ user.email }}</p>
+            </div>
+        </div>
+        <!-- FORM HERE -->
+    </div>
+    {% show_subscriptions request.user %}
+{% endblock content %}
