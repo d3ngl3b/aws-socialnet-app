@@ -15,7 +15,7 @@
 ## Table of Contents
 - [About](#-about)
 - [What's New](#-whats-new)
-- [AWS resources](#aws-resources)
+- [AWS resources](#-aws-resources)
 - [K8s cluster](#-kubernetes-cluster)
 - [ArgoCD](#argocd-deployment)
 - [Contacts](#-contacts)
